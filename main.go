@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Yakiyo/ugit/cmd"
 	"github.com/spf13/pflag"
 )
 
@@ -22,10 +23,10 @@ func main() {
 	}
 }
 
-func run(cmd string, args []string) error {
-	switch cmd {
+func run(command string, args []string) error {
+	switch command {
 	case "init":
-		return initCmd()
+		return cmd.Init()
 	}
 
 	return nil

@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
 
 const GIT_DIR = ".ugit"
 
-func initCmd() error {
+func Init() error {
 	err := os.MkdirAll(GIT_DIR, os.ModePerm)
 	if err != nil {
 		return err
