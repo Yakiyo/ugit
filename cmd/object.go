@@ -28,7 +28,7 @@ func HashObj(args []string) error {
 func CatFile(args []string) error {
 	cwdIsRepo()
 	nArgs(args, 1)
-	data, err := data.GetObject(args[0], "blob")
+	data, err := data.GetObject(args[0], "")
 	if err != nil {
 		return err
 	}
@@ -43,5 +43,10 @@ func WriteTree(args []string) error {
 		return fmt.Errorf("failed to get cwd, err = %v", err)
 	}
 	log.Infof("cwd %v", cwd)
-	return base.WriteTree(cwd)
+	id, err := base.WriteTree(cwd)
+	if err != nil {
+		return err
+	}
+	fmt.Println(id)
+	return nil
 }

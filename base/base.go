@@ -1,6 +1,7 @@
 package base
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,33 +10,46 @@ import (
 	"github.com/charmbracelet/log"
 )
 
+type objItem struct {
+	name, id, ftype string
+}
+
 // WriteTree - this is the directory equivalent of `data.CreateObject`
-func WriteTree(dir string) error {
-	// dirs to skip
+func WriteTree(dir string) (string, error) {
+	objects := []objItem{}
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		return err
+		return "", err
 	}
 	for _, entry := range entries {
 		if entry.IsDir() {
 			// we skip directories like `.git` and `.ugit`
 			if !shouldSkip(entry.Name()) {
-				WriteTree(filepath.Join(dir, entry.Name()))
+				id, err := WriteTree(filepath.Join(dir, entry.Name()))
+				if err != nil {
+					return "", err
+				}
+				objects = append(objects, objItem{entry.Name(), id, "tree"})
 			}
 			continue
 		}
 		path := filepath.Join(dir, entry.Name())
 		content, err := os.ReadFile(path)
 		if err != nil {
-			return err
+			return "", err
 		}
-		objname, err := data.CreateObject(content, "blob")
+		id, err := data.CreateObject(content, "blob")
 		if err != nil {
-			return err
+			return "", err
 		}
-		log.Info(objname, "path", path)
+		objects = append(objects, objItem{entry.Name(), id, "blob"})
+		log.Info(id, "path", path)
 	}
-	return nil
+	var str string
+	for _, i := range objects {
+		str += fmt.Sprintf("%v %v %v\n", i.name, i.id, i.ftype)
+	}
+	return data.CreateObject([]byte(str), "tree")
 }
 
 func shouldSkip(path string) bool {
