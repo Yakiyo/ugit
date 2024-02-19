@@ -24,7 +24,16 @@ func WriteTree(dir string) error {
 			}
 			continue
 		}
-		log.Info(entry.Name())
+		path := filepath.Join(dir, entry.Name())
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		objname, err := data.CreateObject(content, "blob")
+		if err != nil {
+			return err
+		}
+		log.Info(objname, "path", path)
 	}
 	return nil
 }
