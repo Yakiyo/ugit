@@ -37,6 +37,8 @@ func createHash(content []byte, ftype string) ([]byte, error) {
 	if err := os.MkdirAll(filepath.Dir(path), os.ModeDir); err != nil {
 		return []byte{}, err
 	}
+	// FIXME: this creates an error when `ugit hash-object main.go` is ran. Not sure
+	// why this happens, every other file works, just not main.go
 	file, err := os.Create(path)
 	if err != nil {
 		log.Error("Error creating object file", "err", err)
