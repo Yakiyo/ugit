@@ -38,6 +38,10 @@ func CatFile(args []string) error {
 
 func WriteTree(args []string) error {
 	cwdIsRepo()
-	nArgs(args, 1)
-	return base.WriteTree(args[0])
+	cwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get cwd, err = %v", err)
+	}
+	log.Infof("cwd %v", cwd)
+	return base.WriteTree(cwd)
 }
