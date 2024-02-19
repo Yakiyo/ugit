@@ -32,6 +32,7 @@ func CreateObject(content []byte, ftype string) (string, error) {
 		log.Error("Error creating object file", "err", err)
 		return "", err
 	}
+	defer file.Close()
 	_, err = file.Write(data)
 	if err != nil {
 		log.Error("Error when writing content to object file", "err", err)
