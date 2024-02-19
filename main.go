@@ -29,7 +29,9 @@ func run(command string, args []string) error {
 		return cmd.Init()
 	case "hash-object":
 		return cmd.HashObj(args)
+	case "cat-file":
+		return cmd.CatFile(args)
 	}
-
-	return nil
+	// prolly some unknown command received
+	return fmt.Errorf("unknown command `%v` received", command)
 }
