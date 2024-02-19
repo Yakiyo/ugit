@@ -15,7 +15,7 @@ func HashObj(args []string) error {
 	if len(args) != 1 {
 		return fmt.Errorf("invalid arguments provided, must provide only one argument")
 	}
-	content, err := os.ReadFile(args[0])	
+	content, err := os.ReadFile(args[0])
 	if err != nil {
 		log.Error("failure when reading file", "path", args[0])
 		return err
@@ -42,8 +42,8 @@ func createObject(content []byte, ftype string) (string, error) {
 	data := []byte{}
 	data = append(data, []byte(ftype)...)
 	data = append(data, []byte("\x00")...)
-	data = append(data,  content...)
-	
+	data = append(data, content...)
+
 	sum := sha1.Sum(data)
 	objname := hex.EncodeToString(sum[:])
 	path := filepath.Join(GIT_DIR, "objects", string(objname[:]))
