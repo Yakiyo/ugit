@@ -25,3 +25,13 @@ func WriteTree(args []string) error {
 	fmt.Println(id)
 	return nil
 }
+
+func ReadTree(args []string) error {
+	cwdIsRepo()
+	nArgs(args, 1)
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	return base.ReadTree(args[0], cwd)
+}

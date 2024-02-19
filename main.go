@@ -38,6 +38,8 @@ func run(command string, args []string) error {
 		return cmd.CatFile(args)
 	case "write-tree":
 		return cmd.WriteTree(args)
+	case "read-tree":
+		return cmd.ReadTree(args)
 	}
 	// prolly some unknown command received
 	return fmt.Errorf("unknown command `%v` received", command)
