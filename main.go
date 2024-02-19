@@ -27,6 +27,8 @@ func run(command string, args []string) error {
 	switch command {
 	case "init":
 		return cmd.Init()
+	case "hash-object":
+		return cmd.HashObj(args)
 	}
 
 	return nil
