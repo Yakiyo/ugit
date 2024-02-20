@@ -6,22 +6,20 @@ import (
 
 	"github.com/Yakiyo/ugit/cmd"
 	"github.com/charmbracelet/log"
-	"github.com/spf13/pflag"
 )
 
 func main() {
 	// dont print time in log
 	log.SetTimeFormat("")
 	log.SetLevel(log.InfoLevel)
+	args := os.Args[1:]
 
-	pflag.Parse()
-	pargs := pflag.Args()
-	if len(pargs) < 1 {
+	if len(args) < 1 {
 		log.Error("No arguments provided. Provide a command argument")
 		os.Exit(1)
 	}
 
-	err := run(pargs[0], pargs[1:])
+	err := run(args[0], args[1:])
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
