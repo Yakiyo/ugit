@@ -14,7 +14,6 @@ import (
 
 // hash a file and create object with the hash as file name
 func HashObject(args []string) error {
-	utils.CwdIsRepo()
 	utils.NArgs(args, 1)
 	content, err := os.ReadFile(args[0])
 	if err != nil {
@@ -31,7 +30,6 @@ func HashObject(args []string) error {
 
 // read a object with the filename as the given hash
 func CatFile(args []string) error {
-	utils.CwdIsRepo()
 	utils.NArgs(args, 1)
 	data, err := data.GetObject(args[0], "")
 	if err != nil {

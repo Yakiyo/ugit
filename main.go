@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Yakiyo/ugit/cmd"
+	"github.com/Yakiyo/ugit/utils"
 	"github.com/charmbracelet/log"
 )
 
@@ -27,9 +28,17 @@ func main() {
 }
 
 func run(command string, args []string) error {
+	// regular commands go here, the ones that dont
+	// require any initializations
 	switch command {
 	case "init":
 		return cmd.Init()
+	}
+
+	// this commands must only be ran in a repo
+	// which is essentially a dir with a .ugit dir in it
+	utils.CwdIsRepo()
+	switch command {
 	case "hash-object":
 		return cmd.HashObject(args)
 	case "cat-file":
