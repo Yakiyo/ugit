@@ -13,6 +13,11 @@ import (
 
 const GIT_DIR = ".ugit"
 
+const (
+	BlobType = "blob"
+	TreeType = "tree"
+)
+
 // content is the file's content, ftype is the file's type (default should be blob)
 func CreateObject(content []byte, ftype string) (string, error) {
 	data := []byte{}

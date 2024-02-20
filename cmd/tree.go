@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/log"
 )
 
+// scan cwd and create objects of the entire dir recursively
 func WriteTree(args []string) error {
 	cwdIsRepo()
 	cwd, err := os.Getwd()
@@ -26,6 +27,7 @@ func WriteTree(args []string) error {
 	return nil
 }
 
+// read an existing tree object and write it to current directory
 func ReadTree(args []string) error {
 	cwdIsRepo()
 	nArgs(args, 1)

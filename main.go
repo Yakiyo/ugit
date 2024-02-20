@@ -33,7 +33,7 @@ func run(command string, args []string) error {
 	case "init":
 		return cmd.Init()
 	case "hash-object":
-		return cmd.HashObj(args)
+		return cmd.HashObject(args)
 	case "cat-file":
 		return cmd.CatFile(args)
 	case "write-tree":

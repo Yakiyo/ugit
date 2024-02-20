@@ -11,7 +11,8 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-func HashObj(args []string) error {
+// hash a file and create object with the hash as file name
+func HashObject(args []string) error {
 	cwdIsRepo()
 	nArgs(args, 1)
 	content, err := os.ReadFile(args[0])
@@ -19,7 +20,7 @@ func HashObj(args []string) error {
 		log.Error("failure when reading file", "path", args[0])
 		return err
 	}
-	h, err := data.CreateObject(content, "blob")
+	h, err := data.CreateObject(content, data.BlobType)
 	if err != nil {
 		return err
 	}
@@ -27,6 +28,7 @@ func HashObj(args []string) error {
 	return nil
 }
 
+// read a object with the filename as the given hash
 func CatFile(args []string) error {
 	cwdIsRepo()
 	nArgs(args, 1)

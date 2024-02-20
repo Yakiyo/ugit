@@ -38,18 +38,18 @@ func WriteTree(dir string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		id, err := data.CreateObject(content, "blob")
+		id, err := data.CreateObject(content, data.BlobType)
 		if err != nil {
 			return "", err
 		}
-		objects = append(objects, objItem{entry.Name(), id, "blob"})
+		objects = append(objects, objItem{entry.Name(), id, data.BlobType})
 		log.Info(id, "path", path)
 	}
 	var str string
 	for _, i := range objects {
 		str += fmt.Sprintf("%v %v %v\n", i.name, i.id, i.ftype)
 	}
-	return data.CreateObject([]byte(str), "tree")
+	return data.CreateObject([]byte(str), data.TreeType)
 }
 
 func shouldSkip(path string) bool {
