@@ -8,12 +8,13 @@ import (
 	"os"
 
 	"github.com/Yakiyo/ugit/base"
+	"github.com/Yakiyo/ugit/utils"
 	"github.com/charmbracelet/log"
 )
 
 // scan cwd and create objects of the entire dir recursively
 func WriteTree(args []string) error {
-	cwdIsRepo()
+	utils.CwdIsRepo()
 	cwd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get cwd, err = %v", err)
@@ -29,8 +30,8 @@ func WriteTree(args []string) error {
 
 // read an existing tree object and write it to current directory
 func ReadTree(args []string) error {
-	cwdIsRepo()
-	nArgs(args, 1)
+	utils.CwdIsRepo()
+	utils.NArgs(args, 1)
 	cwd, err := os.Getwd()
 	if err != nil {
 		return err

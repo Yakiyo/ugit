@@ -1,4 +1,4 @@
-package cmd
+package utils
 
 import (
 	"errors"
@@ -12,15 +12,16 @@ import (
 
 var ErrNotGItDir error = errors.New("cwd is not a working ugit directory, create one with `ugit init`")
 
-// assert if min `n` arguments where provided
-func nArgs(args []string, n int) {
-	if len(args) != n {
-		log.Errorf("argument error, require %v arguments to be provided", n)
-		os.Exit(1)
+// exists returns whether the given file or directory exists
+func PathExists(path string) bool {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
 	}
+	return err == nil
 }
 
-func cwdIsRepo(args ...string) {
+func CwdIsRepo(args ...string) {
 	var cwd string
 	if len(args) == 0 {
 		wd, err := os.Getwd()
@@ -37,11 +38,10 @@ func cwdIsRepo(args ...string) {
 	}
 }
 
-// exists returns whether the given file or directory exists
-func PathExists(path string) bool {
-	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		return false
+// assert if `n` arguments where provided
+func NArgs(args []string, n int) {
+	if len(args) != n {
+		log.Errorf("argument error, require %v arguments to be provided", n)
+		os.Exit(1)
 	}
-	return err == nil
 }
