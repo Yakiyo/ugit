@@ -2,6 +2,7 @@ package base
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -10,12 +11,26 @@ import (
 )
 
 func ReadTree(treeid, cwd string) error {
+	// TODO: clear current dir first
 	tree, err := getTree(treeid, cwd)
-	fmt.Println(treeid)
 	if err != nil {
 		return err
 	}
-	log.Info("tree", "val", tree)
+	log.Debug("finished reading tree", "tree", tree)
+	for path, id := range tree {
+		err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
+		if err != nil {
+			return err
+		}
+		content, err := data.GetObject(id, "")
+		if err != nil {
+			return err
+		}
+		err = os.WriteFile(path, []byte(content), 0644)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -69,4 +84,14 @@ func iterTreeItems(id string) ([]objItem, error) {
 		items = append(items, objItem{name, id, ftype})
 	}
 	return items, nil
+}
+
+/** copy pasta from cmd/util.go **/
+
+func PathExists(path string) bool {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return err == nil
 }

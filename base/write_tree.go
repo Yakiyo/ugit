@@ -43,7 +43,7 @@ func WriteTree(dir string) (string, error) {
 			return "", err
 		}
 		objects = append(objects, objItem{entry.Name(), id, data.BlobType})
-		log.Info(id, "path", path)
+		log.Debug(id, "path", path)
 	}
 	var str string
 	for _, i := range objects {
