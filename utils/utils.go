@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/Yakiyo/ugit/data"
 	"github.com/charmbracelet/log"
@@ -44,4 +45,44 @@ func NArgs(args []string, n int) {
 		log.Errorf("argument error, require %v arguments to be provided", n)
 		os.Exit(1)
 	}
+}
+
+func ShouldSkip(path string) bool {
+	skips := []string{".git", data.GIT_DIR}
+	for _, skip := range skips {
+		if strings.Contains(path, skip) {
+			return true
+		}
+	}
+	return false
+}
+
+// recursively scan `dir` and return the file names (full path relative to `dir`)
+func ScanDir(dir string) ([]string, error) {
+	files := []string{}
+	err := scan(dir, &files)
+	return files, err
+}
+
+// scan populates the `files` slice with path.
+// we use a separate func from `ScanDir` so that we can initialize
+// a single slice and just keep appending to it later on
+func scan(dir string, files *[]string) error {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+	var path string
+	for _, entry := range entries {
+		path = filepath.Join(dir, entry.Name())
+		if entry.IsDir() {
+			err = scan(path, files)
+			if err != nil {
+				return err
+			}
+		} else {
+			*files = append(*files, path)
+		}
+	}
+	return nil
 }
