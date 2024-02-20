@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/Yakiyo/ugit/data"
+	"github.com/Yakiyo/ugit/utils"
 	"github.com/charmbracelet/log"
 )
 
@@ -24,7 +24,7 @@ func WriteTree(dir string) (string, error) {
 	for _, entry := range entries {
 		if entry.IsDir() {
 			// we skip directories like `.git` and `.ugit`
-			if !shouldSkip(entry.Name()) {
+			if !utils.ShouldSkip(entry.Name()) {
 				id, err := WriteTree(filepath.Join(dir, entry.Name()))
 				if err != nil {
 					return "", err
@@ -50,14 +50,4 @@ func WriteTree(dir string) (string, error) {
 		str += fmt.Sprintf("%v %v %v\n", i.name, i.id, i.ftype)
 	}
 	return data.CreateObject([]byte(str), data.TreeType)
-}
-
-func shouldSkip(path string) bool {
-	skips := []string{".git", data.GIT_DIR}
-	for _, skip := range skips {
-		if strings.Contains(path, skip) {
-			return true
-		}
-	}
-	return false
 }

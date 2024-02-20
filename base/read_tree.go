@@ -7,16 +7,23 @@ import (
 	"strings"
 
 	"github.com/Yakiyo/ugit/data"
+	"github.com/Yakiyo/ugit/utils"
 	"github.com/charmbracelet/log"
 )
 
 func ReadTree(treeid, cwd string) error {
-	// TODO: clear current dir first
 	tree, err := getTree(treeid, cwd)
 	if err != nil {
 		return err
 	}
 	log.Debug("finished reading tree", "tree", tree)
+
+	// clear any files not included in `tree`
+	err = clearFiles(tree, cwd)
+	if err != nil {
+		return err
+	}
+
 	for path, id := range tree {
 		err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
 		if err != nil {
@@ -34,7 +41,7 @@ func ReadTree(treeid, cwd string) error {
 	return nil
 }
 
-// read a tree object
+// recursively read a tree object
 func getTree(id, base string) (map[string]string, error) {
 	tree := map[string]string{}
 	entries, err := iterTreeItems(id)
@@ -86,12 +93,24 @@ func iterTreeItems(id string) ([]objItem, error) {
 	return items, nil
 }
 
-/** copy pasta from cmd/util.go **/
-
-func PathExists(path string) bool {
-	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		return false
+// first recursively scan `cwd`, extract all files, then for each file in cwd,
+// check if it is in tree or it should be ignored/skipped, if both is false, that
+// means the file should be delete, so delete it. this prevents having irrelevant files
+// from a commit when doing read-tree
+func clearFiles(tree map[string]string, cwd string) error {
+	files, err := utils.ScanDir(cwd)
+	if err != nil {
+		return err
 	}
-	return err == nil
+	for _, file := range files {
+		_, ok := tree[file]
+		if ok || utils.ShouldSkip(file) {
+			continue
+		}
+		err = os.Remove(file)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
