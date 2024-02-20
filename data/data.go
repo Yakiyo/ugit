@@ -14,8 +14,9 @@ import (
 const GIT_DIR = ".ugit"
 
 const (
-	BlobType = "blob"
-	TreeType = "tree"
+	BlobType   = "blob"
+	TreeType   = "tree"
+	CommitType = "commit"
 )
 
 // content is the file's content, ftype is the file's type (default should be blob)
