@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/Yakiyo/ugit/utils"
+	"github.com/charmbracelet/log"
 )
 
 var (
@@ -19,6 +20,7 @@ func SetHEAD(id string) error {
 	}
 	defer file.Close()
 	_, err = file.Write([]byte(id))
+	log.Info("writing HEAD", "id", id)
 	return err
 }
 

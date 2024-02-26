@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Yakiyo/ugit/data"
+	"github.com/charmbracelet/log"
 )
 
 // creates the commit object
@@ -20,10 +21,22 @@ func Commit(message string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	head, err := data.GetHEAD()
+	if err != nil {
+		log.Warn("Unexpected error when trying to read head", "err", err)
+		head = ""
+	}
+	if head != "" {
+		head = fmt.Sprintf("parent %v\n", head)
+	}
 	body := fmt.Sprintf(
-		"tree %v\ntime %v\n\n%v",
-		id, time.Now().Format("2006-01-02T15:04:05"),
+		"tree %v%v\ntime %v\n\n%v",
+		id, head, time.Now().Format("2006-01-02T15:04:05"),
 		message,
 	)
-	return data.CreateObject([]byte(body), data.CommitType)
+	cid, err := data.CreateObject([]byte(body), data.CommitType)
+	if err == nil {
+		err = data.SetHEAD(cid)
+	}
+	return cid, err
 }
