@@ -7,9 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Yakiyo/ugit/data"
 	"github.com/charmbracelet/log"
 )
+
+const GIT_DIR = ".ugit"
 
 var ErrNotGItDir error = errors.New("cwd is not a working ugit directory, create one with `ugit init`")
 
@@ -33,7 +34,7 @@ func CwdIsRepo(args ...string) {
 	} else {
 		cwd = args[0]
 	}
-	if !PathExists(filepath.Join(cwd, data.GIT_DIR)) {
+	if !PathExists(filepath.Join(cwd, GIT_DIR)) {
 		log.Error(ErrNotGItDir)
 		os.Exit(1)
 	}
@@ -48,7 +49,7 @@ func NArgs(args []string, n int) {
 }
 
 func ShouldSkip(path string) bool {
-	skips := []string{".git", data.GIT_DIR}
+	skips := []string{".git", GIT_DIR}
 	for _, skip := range skips {
 		if strings.Contains(path, skip) {
 			return true
