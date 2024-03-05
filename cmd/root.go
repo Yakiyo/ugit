@@ -26,10 +26,35 @@ func Init() error {
 
 func Commit(args []string) error {
 	utils.NArgs(args, 1)
-	id, err := base.Commit(args[0])
+	id, err := base.CreateCommit(args[0])
 	if err != nil {
 		return err
 	}
 	fmt.Println(id)
+	return nil
+}
+
+func Log(args []string) error {
+	id, err := data.GetHEAD()
+	if err != nil {
+		return err
+	}
+	for id != "" {
+		commit, err := base.GetCommit(id)
+		if err != nil {
+			return err
+		}
+		commit.Id = id
+		fmt.Printf(
+			"commit: %v\n"+
+				"time: %v\n"+
+				"message: %v\n\n",
+			commit.Id,
+			commit.Time.String(),
+			commit.Message,
+		)
+
+		id = commit.Parent
+	}
 	return nil
 }
