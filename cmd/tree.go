@@ -36,3 +36,9 @@ func ReadTree(args []string) error {
 	}
 	return base.ReadTree(args[0], cwd)
 }
+
+// moves HEAD to a specific commit and remembers it
+func Checkout(args []string) error {
+	utils.NArgs(args, 1)
+	return base.Checkout(args[0])
+}

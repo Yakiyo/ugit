@@ -51,6 +51,8 @@ func run(command string, args []string) error {
 		return cmd.Commit(args)
 	case "log":
 		return cmd.Log(args)
+	case "checkout":
+		return cmd.Checkout(args)
 	}
 	// prolly some unknown command received
 	return fmt.Errorf("unknown command `%v` received", command)

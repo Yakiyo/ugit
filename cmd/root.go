@@ -46,7 +46,7 @@ func Log(args []string) error {
 			return err
 		}
 	}
-	
+
 	for id != "" {
 		commit, err := base.GetCommit(id)
 		if err != nil {
