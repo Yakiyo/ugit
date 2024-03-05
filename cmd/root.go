@@ -35,10 +35,18 @@ func Commit(args []string) error {
 }
 
 func Log(args []string) error {
-	id, err := data.GetHEAD()
-	if err != nil {
-		return err
+	var id string
+	var err error
+
+	if len(args) > 0 {
+		id = args[0]
+	} else {
+		id, err = data.GetHEAD()
+		if err != nil {
+			return err
+		}
 	}
+	
 	for id != "" {
 		commit, err := base.GetCommit(id)
 		if err != nil {
